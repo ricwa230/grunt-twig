@@ -21,12 +21,17 @@ module.exports = function(grunt) {
       separator: '\n',
       template: '{{ variable }} = {{ variable }} || {};\n{{ templates }}\n',
       each_template: '{{ variable }}["{{ filepath }}"] = Twig.twig({ data: {{ compiled }} });',
-      template_key: function(path) { return path; }
+      template_key: function(path) { return path; },
+      extend: function () {},
+      allowInlineIncludes: true
     });
 
+    // extend twig
+    options.extend(Twig);
+
     // Compile *our* templates.
-    options.template = Twig.twig({ data: options.template });
-    options.each_template = Twig.twig({ data: options.each_template });
+    options.template = Twig.twig({ allowInlineIncludes: options.allowInlineIncludes, data: options.template });
+    options.each_template = Twig.twig({ allowInlineIncludes: options.allowInlineIncludes, data: options.each_template });
 
     // Iterate over all specified file groups.
     this.files.forEach(function(f) {
